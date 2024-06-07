@@ -2,6 +2,12 @@
 
 > 🔎 Administrative web interface for MeiliSearch.
 
+## Usage
+
+```
+$ docker run -d --name meili-admin -p 4173:8080 ghcr.io/axelrindle/meiliadmin
+```
+
 ## Tech Stack
 
 - MeiliSearch
