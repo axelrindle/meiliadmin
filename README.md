@@ -1,3 +1,5 @@
+[![CI](https://github.com/axelrindle/meiliadmin/actions/workflows/ci.yml/badge.svg)](https://github.com/axelrindle/meiliadmin/actions/workflows/ci.yml)
+
 # MeiliAdmin
 
 > 🔎 Administrative web interface for MeiliSearch.
