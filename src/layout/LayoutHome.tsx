@@ -1,4 +1,5 @@
 import DarkModeToggle from '@/components/DarkModeToggle'
+import Footer from '@/components/Footer'
 import { Button } from '@/components/ui/button'
 import {
     Card,
@@ -91,7 +92,7 @@ export default function LayoutHome() {
             </div>
         </header>
 
-        <div className="container mx-auto my-8">
+        <div className="container mx-auto my-8 flex-1">
             <div className="flex flex-row items-start gap-x-16">
 
                 <Card className='min-w-64'>
@@ -120,5 +121,7 @@ export default function LayoutHome() {
 
             </div>
         </div>
+
+        <Footer />
     </>)
 }
