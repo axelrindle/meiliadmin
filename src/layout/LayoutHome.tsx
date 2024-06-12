@@ -39,11 +39,6 @@ const links: Link[] = [
         label: 'API Keys',
         href: '/api-keys',
     },
-    {
-        label: 'Settings',
-        href: '/settings',
-        disabled: true,
-    },
 ]
 
 export default function LayoutHome() {
