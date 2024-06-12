@@ -19,7 +19,8 @@
   "plugins": [
     "@typescript-eslint",
     "react",
-    "react-refresh"
+    "react-refresh",
+    "import-newlines"
   ],
   "settings": {
     "react": {
@@ -48,6 +49,14 @@
       "error",
       {
         "varsIgnorePattern": "^_.*"
+      }
+    ],
+    "import-newlines/enforce": [
+      "error",
+      {
+        "items": 3,
+        "max-len": 100,
+        "semi": false
       }
     ]
   }

@@ -1,13 +1,24 @@
 import DarkModeToggle from '@/components/DarkModeToggle'
 import { Button } from '@/components/ui/button'
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
+import {
+    Card,
+    CardContent,
+    CardHeader,
+    CardTitle
+} from '@/components/ui/card'
 
 import Logo from '@/components/ui/logo'
 import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover'
 import { useApiKey } from '@/store'
 import { faUserSecret } from '@fortawesome/free-solid-svg-icons'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import { Link, Outlet, To, useLocation, useNavigate } from 'react-router-dom'
+import {
+    Link,
+    Outlet,
+    To,
+    useLocation,
+    useNavigate
+} from 'react-router-dom'
 
 type Link = {
     label: string
@@ -23,7 +34,6 @@ const links: Link[] = [
     {
         label: 'Indices',
         href: '/indices',
-        disabled: true,
     },
     {
         label: 'API Keys',

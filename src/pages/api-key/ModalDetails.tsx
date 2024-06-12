@@ -1,6 +1,14 @@
 import { useKeys } from '@/api/key'
 import { Button } from '@/components/ui/button'
-import { Dialog, DialogClose, DialogContent, DialogFooter, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui/dialog'
+import {
+    Dialog,
+    DialogClose,
+    DialogContent,
+    DialogFooter,
+    DialogHeader,
+    DialogTitle,
+    DialogTrigger
+} from '@/components/ui/dialog'
 import { ScrollArea, ScrollBar } from '@/components/ui/scroll-area'
 import { useToast } from '@/components/ui/use-toast'
 import { useMeili } from '@/context/MeiliProvider'

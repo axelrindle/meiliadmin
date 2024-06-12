@@ -2,7 +2,15 @@ import PageBoot from '@/pages/PageBoot'
 import PageSetApiKey from '@/pages/PageSetApiKey'
 import { useApiKey } from '@/store'
 import { MeiliSearch } from 'meilisearch'
-import { ReactNode, createContext, useCallback, useContext, useEffect, useMemo, useState } from 'react'
+import {
+    ReactNode,
+    createContext,
+    useCallback,
+    useContext,
+    useEffect,
+    useMemo,
+    useState
+} from 'react'
 
 type State = 'boot' | 'uninitialized' | 'pending' | 'ready'
 
