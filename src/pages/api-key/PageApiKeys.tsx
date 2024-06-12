@@ -1,20 +1,15 @@
 import { useKeys } from '@/api/key'
-import {
-    CardContent,
-    CardDescription,
-    CardHeader,
-    CardTitle
-} from '@/components/ui/card'
+import { Button } from '@/components/ui/button'
+import { CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { DataTable } from '@/components/ui/data-table'
+import { faPlus } from '@fortawesome/free-solid-svg-icons'
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { ColumnDef } from '@tanstack/react-table'
 import dayjs from 'dayjs'
 import { Key } from 'meilisearch'
 import { useRef, useState } from 'react'
-import ModalDetails from './ModalDetails'
-import { Button } from '@/components/ui/button'
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import { faPlus } from '@fortawesome/free-solid-svg-icons'
 import ModalCreate from './ModalCreate'
+import ModalDetails from './ModalDetails'
 
 const columns: ColumnDef<Key>[] = [
     {
@@ -73,7 +68,7 @@ function Content() {
     return (<>
         <DataTable
             columns={columns}
-            data={data!.results}
+            data={data?.results ?? []}
             onClickRow={row => {
                 setKey(row.original)
                 openModal.current?.click()
@@ -95,14 +90,10 @@ export default function PageApiKeys() {
             <CardTitle>
                 API Keys
             </CardTitle>
-            <CardDescription>
-                Manage API Keys.
-            </CardDescription>
         </CardHeader>
 
         <CardContent>
             <Button
-                size="sm"
                 className='mb-8'
                 onClick={() => openModal.current?.click()}
             >
