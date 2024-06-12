@@ -80,3 +80,7 @@ jobs:
           push: ${{ github.event_name != 'pull_request' }}
           cache-from: type=gha
           cache-to: type=gha,mode=max
+          build-args: |
+            VITE_APP_VERSION=${{ github.ref_name }}
+            VITE_APP_COMMIT=${{ github.sha }}
+

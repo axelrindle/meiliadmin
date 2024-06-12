@@ -2,8 +2,8 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faGithub } from '@fortawesome/free-brands-svg-icons'
 import logo from '../assets/logo.svg'
 
-const version = import.meta.env.VITE_APP_VERSION ?? 'dev'
-const sha = import.meta.env.VITE_APP_COMMIT ?? 'sha1337'
+const version: string = import.meta.env.VITE_APP_VERSION ?? 'dev'
+const sha: string = import.meta.env.VITE_APP_COMMIT?.slice(0, 7) ?? 'sha1337'
 
 export default function Footer() {
     return (
