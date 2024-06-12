@@ -1,15 +1,14 @@
+import PageBoot from '@/pages/PageBoot'
 import PageSetApiKey from '@/pages/PageSetApiKey'
 import { useApiKey } from '@/store'
 import { MeiliSearch } from 'meilisearch'
-import { ReactNode, createContext, useContext, useEffect, useMemo, useState } from 'react'
+import { ReactNode, createContext, useCallback, useContext, useEffect, useMemo, useState } from 'react'
+
+type State = 'boot' | 'uninitialized' | 'pending' | 'ready'
 
 interface Context {
-    apiKey?: string
-    client?: MeiliSearch
-
     error?: Error
-
-    isPending: boolean
+    client?: MeiliSearch
 }
 
 interface Props {
@@ -18,62 +17,104 @@ interface Props {
 
 const MeiliContext = createContext<Context>({} as Context)
 
+async function connect(host?: string, apiKey?: string): Promise<MeiliSearch | undefined> {
+    if(!host || !apiKey) {
+        return undefined
+    }
+
+    const client = new MeiliSearch({
+        host,
+        apiKey,
+    })
+
+    const version = await client.getVersion()
+
+    console.debug(`Connected to MeiliSearch ${version.pkgVersion}`)
+
+    return client
+}
+
 export default function MeiliProvider({ children }: Props) {
     const [error, setError] = useState<Error>()
-    const [verified, setVerified] = useState(false)
+    const [client, setClient] = useState<MeiliSearch>()
+    const [state, setState] = useState<State>('boot')
 
-    const { host, apiKey } = useApiKey()
+    const { host, apiKey, setHost, setKey } = useApiKey()
 
-    const client = useMemo(() => {
-        if(!host || !apiKey) {
-            return undefined
-        }
+    const doConnect = useCallback((host?: string, apiKey?: string) => {
+        setState('pending')
 
-        try {
-            const client = new MeiliSearch({
-                host,
-                apiKey,
+        connect(host, apiKey)
+            .then(client => {
+                setClient(client)
+                setError(undefined)
+
+                if (client) {
+                    setHost(host)
+                    setKey(apiKey)
+
+                    setState('ready')
+                } else {
+                    setState('uninitialized')
+                }
             })
-
-            setError(undefined)
-
-            return client
-        } catch (error) {
-            setError(error as Error)
-
-            return undefined
-        }
-    }, [apiKey, host])
+            .catch(error => {
+                setError(error)
+                setState('uninitialized')
+            })
+    }, [setHost, setKey])
 
     useEffect(() => {
-        async function connect() {
-            try {
-                const version = await client?.getVersion()
+        doConnect(host, apiKey)
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [])
 
-                setVerified(version !== undefined)
-
-                return version
-            } catch (error) {
-                setError(error as Error)
-                return null
-            }
+    useEffect(() => {
+        if (state !== 'ready') {
+            return
         }
 
-        connect()
-    }, [client])
+        if (!host || !apiKey) {
+            setError(undefined)
+            setClient(undefined)
+            setState('uninitialized')
+        }
+    }, [apiKey, host, state])
 
     const context = useMemo<Context>(() => ({
-        apiKey, client,
-        error,
+        error, client,
+    }), [client, error])
 
-        isPending: !!client && !verified && !error
-    }), [apiKey, client, error, verified])
+    switch (state) {
+    case 'boot':
+        return <PageBoot/>
+
+    case 'uninitialized':
+    case 'pending':
+        return (
+            <MeiliContext.Provider
+                value={context}
+            >
+                <PageSetApiKey
+                    onSubmit={({ host, apiKey }) => doConnect(host, apiKey)}
+                    isPending={state === 'pending'}
+                />
+            </MeiliContext.Provider>
+        )
+
+    case 'ready':
+        return (
+            <MeiliContext.Provider
+                value={context}
+            >
+                {children}
+            </MeiliContext.Provider>
+        )
+    }
 
     return (
-        <MeiliContext.Provider
-            value={context}
-        >
-            {verified ? children : <PageSetApiKey />}
+        <MeiliContext.Provider value={context}>
+
         </MeiliContext.Provider>
     )
 }
