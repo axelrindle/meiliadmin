@@ -1,5 +1,4 @@
-import { useIndices } from '@/api'
-import { useCreateKey, useKeys } from '@/api/key'
+import { useCreateIndex, useIndices } from '@/api'
 import { Button } from '@/components/ui/button'
 import {
     Dialog,
@@ -21,33 +20,21 @@ import {
     FormMessage
 } from '@/components/ui/form'
 import { Input } from '@/components/ui/input'
-import MultipleSelector, { Option } from '@/components/ui/multi-select'
-import { ApiKeyActions } from '@/types'
 import { zodResolver } from '@hookform/resolvers/zod'
 import {
     forwardRef,
     useCallback,
     useEffect,
-    useMemo,
     useState
 } from 'react'
 import { useForm } from 'react-hook-form'
 import { z } from 'zod'
 
-const options: Option[] = ApiKeyActions.map(action => ({
-    label: action.name,
-    value: action.name,
-    description: action.description,
-}))
-
 const formSchema = z.object({
-    name: z.string().min(1),
-    description: z.string().optional(),
-
-    indexes: z.array(z.string()).min(1),
-    actions: z.array(z.string()).min(1),
-
-    expiresAt: z.string().optional(),
+    name: z.string().min(1)
+        .regex(/[a-zA-Z0-9-_]/g, {
+            message: 'must only contain alphanumeric characters, hyphens and underscores'
+        }),
 })
 
 type FormData = z.infer<typeof formSchema>
@@ -55,34 +42,44 @@ type FormData = z.infer<typeof formSchema>
 const ModalCreate = forwardRef<HTMLButtonElement>(function ModalCreate(_props, ref) {
     const [open, setOpen] = useState(false)
 
-    const { refetch } = useKeys()
-    const { data: indices } = useIndices()
+    // const { client } = useMeili()
 
-    const optionsIndices = useMemo(() => indices?.results.map<Option>(index => ({
-        label: index.uid,
-        value: index.uid,
-    })), [indices])
-
-    const { mutateAsync } = useCreateKey()
+    const { refetch } = useIndices()
+    const { mutateAsync } = useCreateIndex()
 
     const form = useForm<FormData>({
         resolver: zodResolver(formSchema),
         defaultValues: {
             name: '',
-            description: '',
-            actions: [],
-            indexes: [],
-            expiresAt: undefined,
         }
     })
     const onSubmit = useCallback(async (data: FormData) => {
-        await mutateAsync({
-            name: data.name,
-            description: data.description || undefined,
-            indexes: data.indexes,
-            actions: data.actions,
-            expiresAt: /* data.expiresAt === undefined ? null : dayjs(data.expiresAt).toDate() */null,
+        /* const { taskUid } =  */await mutateAsync({
+            uid: data.name,
         })
+
+        /* await new Promise((resolve, reject) => {
+            let task: Task | undefined = undefined
+            const taskId = setInterval(async () => {
+                task = await client!.getTask(taskUid)
+                if (task.status !== 'enqueued' && task.status !== 'processing') {
+                    clearInterval(taskId)
+                }
+            })
+
+            if (!task) {
+                reject(new Error('internal error'))
+                return
+            }
+
+            switch (task.status) {
+            case 'canceled':
+            case 'failed':
+                reject(task.error)
+                return
+            }
+        }) */
+
         await refetch()
         setOpen(false)
     }, [mutateAsync, refetch])
@@ -104,16 +101,16 @@ const ModalCreate = forwardRef<HTMLButtonElement>(function ModalCreate(_props, r
                     ref={ref}
                     className='hidden'
                 >
-                    Open Key Modal
+                    Open Index Modal
                 </Button>
             </DialogTrigger>
             <DialogContent>
                 <DialogHeader>
                     <DialogTitle>
-                        Create a new API key
+                        Create a new Index
                     </DialogTitle>
                     <DialogDescription>
-                        Fill out the form below to create a new MeiliSearch API key.
+                        Fill out the form below to create a new MeiliSearch Index.
                     </DialogDescription>
                 </DialogHeader>
 
@@ -144,115 +141,11 @@ const ModalCreate = forwardRef<HTMLButtonElement>(function ModalCreate(_props, r
                                 </FormItem>
                             )}
                         />
-                        <FormField
-                            control={form.control}
-                            name="description"
-                            render={({ field }) => (
-                                <FormItem>
-                                    <FormLabel>
-                                        Description
-                                    </FormLabel>
-                                    <FormControl>
-                                        <Input
-                                            {...field}
-                                            placeholder="an api key for my awesome application"
-                                        />
-                                    </FormControl>
-                                    <FormDescription>
-                                        An optional description for the key
-                                    </FormDescription>
-                                    <FormMessage />
-                                </FormItem>
-                            )}
-                        />
-                        {/* <FormField
-                            control={form.control}
-                            name="expiresAt"
-                            render={({ field }) => (
-                                <FormItem>
-                                    <FormLabel>
-                                        Expiry Date
-                                    </FormLabel>
-                                    <FormControl>
-                                        <Input
-                                            {...field}
-                                            type='datetime-local'
-                                            placeholder="an api key for my awesome application"
-                                        />
-                                    </FormControl>
-                                    <FormDescription>
-                                        Date and time when the key will expire
-                                    </FormDescription>
-                                    <FormMessage />
-                                </FormItem>
-                            )}
-                        /> */}
-                        <FormField
-                            control={form.control}
-                            name="actions"
-                            render={({ field }) => (
-                                <FormItem>
-                                    <FormLabel>
-                                        Actions
-                                    </FormLabel>
-                                    <FormControl>
-                                        <MultipleSelector
-                                            options={options}
-                                            placeholder="Select actions to attach …"
-                                            emptyIndicator={
-                                                <p className="text-center text-lg leading-10 text-gray-600 dark:text-gray-400">
-                                                    no results found.
-                                                </p>
-                                            }
-                                            inputProps={{
-                                                id: 'actions'
-                                            }}
-                                            value={options.filter(option => field.value.findIndex(selected => option.value === selected) > -1)}
-                                            onChange={options => field.onChange(options.map(o => o.value))}
-                                        />
-                                    </FormControl>
-                                    <FormDescription>
-                                        A list of API actions permitted for the key
-                                    </FormDescription>
-                                    <FormMessage />
-                                </FormItem>
-                            )}
-                        />
-                        <FormField
-                            control={form.control}
-                            name="indexes"
-                            render={({ field }) => (
-                                <FormItem>
-                                    <FormLabel>
-                                        Indices
-                                    </FormLabel>
-                                    <FormControl>
-                                        <MultipleSelector
-                                            options={optionsIndices}
-                                            placeholder="Select indices to attach …"
-                                            emptyIndicator={
-                                                <p className="text-center text-lg leading-10 text-gray-600 dark:text-gray-400">
-                                                    no results found.
-                                                </p>
-                                            }
-                                            inputProps={{
-                                                id: 'indexes'
-                                            }}
-                                            value={optionsIndices!.filter(option => field.value.findIndex(selected => option.value === selected) > -1)}
-                                            onChange={options => field.onChange(options.map(o => o.value))}
-                                        />
-                                    </FormControl>
-                                    <FormDescription>
-                                        An array of indices the key is authorized to act on.
-                                    </FormDescription>
-                                    <FormMessage />
-                                </FormItem>
-                            )}
-                        />
 
                         <DialogFooter>
                             <Button
                                 type='submit'
+                                disabled={!form.formState.isValid}
                             >
                                 Submit
                             </Button>

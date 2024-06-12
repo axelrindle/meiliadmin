@@ -2,7 +2,7 @@ import { createBrowserRouter } from 'react-router-dom'
 import LayoutHome from './layout/LayoutHome'
 import PageHome from './pages/PageHome'
 import PageApiKeys from './pages/api-key/PageApiKeys'
-import PageIndices from './pages/PageIndices'
+import PageIndices from './pages/indices/PageIndices'
 
 const router = createBrowserRouter([
     {
