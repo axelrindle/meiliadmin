@@ -7,7 +7,7 @@ const sha: string = import.meta.env.VITE_APP_COMMIT?.slice(0, 7) ?? 'sha1337'
 
 export default function Footer() {
     return (
-        <footer className='bg-secondary text-slate-700 dark:bg-slate-800'>
+        <footer className='bg-secondary text-slate-700 dark:bg-slate-800 dark:text-slate-300'>
             <div className="container mx-auto flex flex-row items-center gap-x-4 py-4">
                 <img src={logo} alt="MeiliSearch Icon" className='h-8' />
                 <p className='font-heading'>
@@ -23,7 +23,7 @@ export default function Footer() {
                     <FontAwesomeIcon icon={faGithub} />
                 </a>
 
-                <p className='text-sm text-slate-500'>
+                <p className='text-sm text-slate-500 dark:text-slate-400'>
                     {version} @ {sha}
                 </p>
             </div>
