@@ -181,7 +181,7 @@ export default function Tasks() {
                     </Button>
                 </div>
 
-                <ScrollArea className='-mx-6 flex-1 border-y bg-slate-50 px-6 shadow-inner'>
+                <ScrollArea className='-mx-6 flex-1 border-y bg-slate-50 px-6 shadow-inner dark:bg-slate-800'>
                     <div className='my-6 space-y-4'>
                         {data?.results.map((task, i) => <Task key={`task-${i}`} task={task} />)}
                     </div>
