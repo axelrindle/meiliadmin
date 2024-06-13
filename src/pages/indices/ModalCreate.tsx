@@ -1,4 +1,5 @@
 import { useCreateIndex, useIndices } from '@/api'
+import { useRunningTasks, useTasks } from '@/api/task'
 import { Button } from '@/components/ui/button'
 import {
     Dialog,
@@ -44,7 +45,10 @@ const ModalCreate = forwardRef<HTMLButtonElement>(function ModalCreate(_props, r
 
     // const { client } = useMeili()
 
-    const { refetch } = useIndices()
+    const { refetch: refetchIndices } = useIndices()
+    const { refetch: refetchTasks } = useTasks()
+    const { refetch: refetchRunning } = useRunningTasks()
+
     const { mutateAsync } = useCreateIndex()
 
     const form = useForm<FormData>({
@@ -54,35 +58,18 @@ const ModalCreate = forwardRef<HTMLButtonElement>(function ModalCreate(_props, r
         }
     })
     const onSubmit = useCallback(async (data: FormData) => {
-        /* const { taskUid } =  */await mutateAsync({
+        await mutateAsync({
             uid: data.name,
         })
 
-        /* await new Promise((resolve, reject) => {
-            let task: Task | undefined = undefined
-            const taskId = setInterval(async () => {
-                task = await client!.getTask(taskUid)
-                if (task.status !== 'enqueued' && task.status !== 'processing') {
-                    clearInterval(taskId)
-                }
-            })
+        await Promise.all([
+            refetchIndices(),
+            refetchTasks(),
+            refetchRunning(),
+        ])
 
-            if (!task) {
-                reject(new Error('internal error'))
-                return
-            }
-
-            switch (task.status) {
-            case 'canceled':
-            case 'failed':
-                reject(task.error)
-                return
-            }
-        }) */
-
-        await refetch()
         setOpen(false)
-    }, [mutateAsync, refetch])
+    }, [mutateAsync, refetchIndices, refetchRunning, refetchTasks])
 
     useEffect(() => {
         if (!open) {
