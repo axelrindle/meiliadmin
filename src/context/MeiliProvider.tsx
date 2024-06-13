@@ -119,12 +119,6 @@ export default function MeiliProvider({ children }: Props) {
             </MeiliContext.Provider>
         )
     }
-
-    return (
-        <MeiliContext.Provider value={context}>
-
-        </MeiliContext.Provider>
-    )
 }
 
 export function useMeili() {
