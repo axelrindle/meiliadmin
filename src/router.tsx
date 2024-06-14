@@ -6,7 +6,7 @@ import PageIndices from './pages/indices/PageIndices'
 
 const router = createBrowserRouter([
     {
-        path: '/',
+        path: import.meta.env.BASE_URL,
         element: <LayoutHome />,
         children: [
             {
@@ -21,10 +21,6 @@ const router = createBrowserRouter([
                 path: '/api-keys',
                 element: <PageApiKeys />,
             },
-            // {
-            //     path: '/settings',
-            //     element: <p>Settings</p>,
-            // },
         ],
     }
 ])
