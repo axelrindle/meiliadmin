@@ -44,7 +44,7 @@ jobs:
           key: ${{ runner.os }}-${{ hashFiles('bun.lockb') }}
 
       - name: Build
-        run: bun run build
+        run: bun run build -- --base /meiliadmin/
 
       - uses: actions/upload-pages-artifact@v3
         with:
