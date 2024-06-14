@@ -57,7 +57,7 @@ function Task({ task }: { task: TaskType }) {
                             className="mr-2 text-sm text-destructive underline underline-offset-4"
                             href={task.error.link}
                             target='_blank'
-                            rel='noreferrer'
+                            rel="noopener noreferrer"
                         >
                             <span className="mr-2">{task.error.message}</span>
                             <FontAwesomeIcon icon={faExternalLinkAlt} className='text-xs text-muted-foreground' />
