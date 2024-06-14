@@ -18,6 +18,8 @@ export default function Footer() {
 
                 <a
                     href="https://github.com/axelrindle/meiliadmin"
+                    target='_blank'
+                    rel="noopener noreferrer"
                     className='text-xl'
                 >
                     <FontAwesomeIcon icon={faGithub} />
