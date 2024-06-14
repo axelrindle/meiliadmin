@@ -14,8 +14,8 @@ function join(...args: string[]) {
     }).filter(x=>x.length).join('/')
 }
 
-function p(...segments: string[]): string {
-    return join(import.meta.env.BASE_URL, ...segments)
+export function p(...segments: string[]): string {
+    return join(import.meta?.env?.BASE_URL ?? '/', ...segments)
 }
 
 const router = createBrowserRouter([

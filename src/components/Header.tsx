@@ -7,6 +7,7 @@ import { Button } from './ui/button'
 import Logo from './ui/logo'
 import { Popover, PopoverContent, PopoverTrigger } from './ui/popover'
 import Tasks from './Tasks'
+import { p } from '@/router'
 
 function ChangeMasterKey() {
     const { setKey } = useApiKey()
@@ -47,7 +48,7 @@ export default function Header() {
     return (
         <header className="bg-card text-primary shadow">
             <div className="container mx-auto flex flex-row items-center gap-x-4 py-4">
-                <Link to="/" className='contents'>
+                <Link to={p('/')} className='contents'>
                     <Logo />
 
                     <h1 className="scroll-m-20 text-2xl font-bold tracking-tight lg:text-4xl">
