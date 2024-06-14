@@ -4,6 +4,20 @@ import PageHome from './pages/PageHome'
 import PageApiKeys from './pages/api-key/PageApiKeys'
 import PageIndices from './pages/indices/PageIndices'
 
+function join(...args: string[]) {
+    return args.map((part, i) => {
+        if (i === 0) {
+            return part.trim().replace(/[/]*$/g, '')
+        } else {
+            return part.trim().replace(/(^[/]*|[/]*$)/g, '')
+        }
+    }).filter(x=>x.length).join('/')
+}
+
+function p(...segments: string[]): string {
+    return join(import.meta.env.BASE_URL, ...segments)
+}
+
 const router = createBrowserRouter([
     {
         path: import.meta.env.BASE_URL,
@@ -14,11 +28,11 @@ const router = createBrowserRouter([
                 element: <PageHome />,
             },
             {
-                path: '/indices',
+                path: p('indices'),
                 element: <PageIndices />,
             },
             {
-                path: '/api-keys',
+                path: p('api-keys'),
                 element: <PageApiKeys />,
             },
         ],
