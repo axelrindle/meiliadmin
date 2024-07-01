@@ -26,15 +26,15 @@ type Link = {
 const links: Link[] = [
     {
         label: 'Home',
-        href: p('/'),
+        href: p(''),
     },
     {
         label: 'Indices',
-        href: p('/indices'),
+        href: p('indices'),
     },
     {
         label: 'API Keys',
-        href: p('/api-keys'),
+        href: p('api-keys'),
     },
 ]
 

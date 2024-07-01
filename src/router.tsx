@@ -3,6 +3,7 @@ import LayoutHome from './layout/LayoutHome'
 import PageHome from './pages/PageHome'
 import PageApiKeys from './pages/api-key/PageApiKeys'
 import PageIndices from './pages/indices/PageIndices'
+import PageSearch from './pages/PageSearch'
 
 function join(...args: string[]) {
     return args.map((part, i) => {
@@ -11,16 +12,23 @@ function join(...args: string[]) {
         } else {
             return part.trim().replace(/(^[/]*|[/]*$)/g, '')
         }
-    }).filter(x=>x.length).join('/')
+    })
+        .filter(x => x.length > 0)
+        .join('/')
 }
 
 export function p(...segments: string[]): string {
-    return join(import.meta?.env?.BASE_URL ?? '/', ...segments)
+    if (import.meta?.env?.BASE_URL !== undefined) {
+        const url = new URL(join(...segments), import.meta?.env?.BASE_URL)
+        return url.pathname
+    }
+
+    return '/' + join(...segments)
 }
 
 const router = createBrowserRouter([
     {
-        path: import.meta.env.BASE_URL,
+        path: p(),
         element: <LayoutHome />,
         children: [
             {
