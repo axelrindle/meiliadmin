@@ -25,6 +25,16 @@ export function useCreateIndex() {
     })
 }
 
+export function useIndexO(uid?: string) {
+    const { client } = useMeili()
+
+    return useQuery({
+        enabled: uid !== undefined,
+        queryKey: ['meili', 'index', uid],
+        queryFn: () => client!.getIndex(uid!)
+    })
+}
+
 export function useIndex(uid?: string) {
     const { client } = useMeili()
 

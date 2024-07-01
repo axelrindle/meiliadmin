@@ -36,7 +36,11 @@ const router = createBrowserRouter([
                 element: <PageApiKeys />,
             },
         ],
-    }
+    },
+    {
+        path: p('search'),
+        element: <PageSearch />,
+    },
 ])
 
 export default router
