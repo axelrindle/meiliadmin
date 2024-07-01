@@ -15,6 +15,9 @@ RUN bun install --frozen-lockfile && \
 
 FROM nginxinc/nginx-unprivileged:alpine-slim
 
+COPY docker /
 COPY --from=builder /app/dist /usr/share/nginx/html
+
+RUN sed -i 's|#gzip.*|gzip on|g' /etc/nginx/nginx.conf
 
 EXPOSE 8080
