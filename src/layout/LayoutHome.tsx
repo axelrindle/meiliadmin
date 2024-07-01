@@ -7,7 +7,6 @@ import {
     CardHeader,
     CardTitle
 } from '@/components/ui/card'
-import { p } from '@/router'
 
 import {
     Link,
@@ -26,15 +25,15 @@ type Link = {
 const links: Link[] = [
     {
         label: 'Home',
-        href: p(''),
+        href: '/',
     },
     {
         label: 'Indices',
-        href: p('indices'),
+        href: '/indices',
     },
     {
         label: 'API Keys',
-        href: p('api-keys'),
+        href: '/api-keys',
     },
 ]
 

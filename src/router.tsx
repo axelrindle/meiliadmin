@@ -5,30 +5,9 @@ import PageApiKeys from './pages/api-key/PageApiKeys'
 import PageIndices from './pages/indices/PageIndices'
 import PageSearch from './pages/PageSearch'
 
-function join(...args: string[]) {
-    return args.map((part, i) => {
-        if (i === 0) {
-            return part.trim().replace(/[/]*$/g, '')
-        } else {
-            return part.trim().replace(/(^[/]*|[/]*$)/g, '')
-        }
-    })
-        .filter(x => x.length > 0)
-        .join('/')
-}
-
-export function p(...segments: string[]): string {
-    if (import.meta?.env?.BASE_URL !== undefined) {
-        const url = new URL(join(...segments), import.meta?.env?.BASE_URL)
-        return url.pathname
-    }
-
-    return '/' + join(...segments)
-}
-
 const router = createBrowserRouter([
     {
-        path: p(),
+        path: '/',
         element: <LayoutHome />,
         children: [
             {
@@ -36,19 +15,21 @@ const router = createBrowserRouter([
                 element: <PageHome />,
             },
             {
-                path: p('indices'),
+                path: '/indices',
                 element: <PageIndices />,
             },
             {
-                path: p('api-keys'),
+                path: '/api-keys',
                 element: <PageApiKeys />,
             },
         ],
     },
     {
-        path: p('search'),
+        path: '/search',
         element: <PageSearch />,
     },
-])
+], {
+    basename: import.meta.env.BASE_URL,
+})
 
 export default router
